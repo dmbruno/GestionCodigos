@@ -1,0 +1,100 @@
+/* Estilo general */
+body {
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 600px;
+}
+
+/* Botones generales */
+.btn {
+    margin: 5px 0;
+}
+
+/* Contenedor scrollable */
+#registered-products {
+    max-height: 200px; /* Altura máxima para el scroll */
+    overflow-y: auto; /* Habilitar scroll vertical */
+    background-color: #ffffff; /* Fondo blanco */
+    border: 1px solid #dee2e6; /* Borde alrededor del contenedor */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 0 !important; /* Eliminar padding adicional */
+}
+
+/* Tabla de productos registrados */
+#registered-products thead th {
+    position: sticky; /* Encabezado siempre visible */
+    top: 0; /* Fijarlo en la parte superior del contenedor */
+    background-color: #f8f9fa; /* Fondo del encabezado */
+    color: #000; /* Color del texto del encabezado */
+    z-index: 1; /* Prioridad sobre las filas */
+    text-align: center; /* Centrar texto */
+    border-bottom: 2px solid #dee2e6; /* Línea inferior del encabezado */
+}
+
+#registered-products tbody td {
+    vertical-align: middle; /* Alinear verticalmente el texto */
+    white-space: nowrap; /* Evitar que el contenido se corte */
+}
+
+/* Filas alternas */
+#registered-products tbody tr:nth-child(odd) {
+    background-color: #f2f2f2; /* Fondo gris claro para filas impares */
+}
+
+#registered-products tbody tr:nth-child(even) {
+    background-color: #ffffff; /* Fondo blanco para filas pares */
+}
+
+/* Botones específicos dentro de la tabla */
+td button {
+    margin-right: 8px; /* Espaciado entre los botones */
+}
+
+/* Botón de Editar */
+.btn-edit {
+    background-color: #ffc107; /* Amarillo */
+    color: #000; /* Texto negro */
+    font-weight: bold;
+    padding: 5px 10px; /* Tamaño del botón */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+.btn-edit:hover {
+    background-color: #e0a800; /* Amarillo más oscuro */
+    color: #fff; /* Texto blanco al pasar el mouse */
+}
+
+/* Botón de Eliminar */
+.btn-delete {
+    background-color: #dc3545; /* Rojo */
+    color: #fff; /* Texto blanco */
+    font-weight: bold;
+    padding: 5px 10px; /* Tamaño del botón */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer;
+}
+
+.btn-delete:hover {
+    background-color: #c82333; /* Rojo más oscuro */
+    color: #fff; /* Texto blanco al pasar el mouse */
+}
+
+/* Icono del tachito de basura */
+.btn-delete-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #dc3545; /* Rojo para el icono */
+}
+
+.btn-delete-icon:hover {
+    color: #a71d2a; /* Rojo más oscuro */
+}
