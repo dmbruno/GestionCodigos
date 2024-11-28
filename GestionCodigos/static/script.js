@@ -7,17 +7,20 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         const code = document.getElementById("barcode").value;
         const location = document.getElementById("location").value;
+        const product = document.getElementById("product").value;
+        const brand = document.getElementById("brand").value;
+
         const response = await fetch("/add", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ code, location })
+            body: JSON.stringify({ code, location, product, brand })
         });
         if (response.ok) {
-            alert("Código registrado con éxito");
+            alert("Producto registrado con éxito");
             form.reset();
             loadRegisteredProducts(); // Actualizar la lista de productos registrados
         } else {
-            alert("Error al registrar el código");
+            alert("Error al registrar el producto");
         }
     });
 
@@ -62,6 +65,8 @@ document.addEventListener("DOMContentLoaded", () => {
             row.innerHTML = `
                 <td>${product["Código de Barra"]}</td>
                 <td>${product["Ubicación"]}</td>
+                <td>${product["Producto"]}</td>
+                <td>${product["Marca"]}</td>
                 <td>
                     <button class="btn btn-danger btn-sm btn-delete" data-code="${product["Código de Barra"]}">
                         Eliminar
@@ -75,17 +80,17 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".btn-delete").forEach(button => {
             button.addEventListener("click", async () => {
                 const code = button.getAttribute("data-code");
-                if (confirm(`¿Estás seguro de eliminar el código: ${code}?`)) {
+                if (confirm(`¿Estás seguro de eliminar el producto con código: ${code}?`)) {
                     const response = await fetch("/delete", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({ code })
                     });
                     if (response.ok) {
-                        alert("Código eliminado");
+                        alert("Producto eliminado");
                         loadRegisteredProducts(); // Actualizar la lista después de eliminar
                     } else {
-                        alert("Error al eliminar el código");
+                        alert("Error al eliminar el producto");
                     }
                 }
             });

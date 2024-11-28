@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.length === 0) {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td colspan="3" class="text-center">No se encontraron registros</td>
+                <td colspan="5" class="text-center">No se encontraron registros</td>
             `;
             table.appendChild(row);
         } else {
@@ -34,6 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${item["Código de Barra"]}</td>
+                    <td>${item["Producto"]}</td>
+                    <td>${item["Marca"]}</td>
                     <td>${item["Ubicación"]}</td>
                     <td>
                         <button class="btn btn-warning btn-edit" data-code="${item["Código de Barra"]}">Editar</button>
@@ -52,16 +54,18 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".btn-edit").forEach(button => {
             button.addEventListener("click", async () => {
                 const code = button.getAttribute("data-code");
+                const newProduct = prompt("Ingresa el nuevo nombre del producto para el código: " + code);
+                const newBrand = prompt("Ingresa la nueva marca para el código: " + code);
                 const newLocation = prompt("Ingresa la nueva ubicación para el código: " + code);
-                if (newLocation) {
+                if (newProduct && newBrand && newLocation) {
                     try {
                         const response = await fetch("/edit", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ code, location: newLocation })
+                            body: JSON.stringify({ code, product: newProduct, brand: newBrand, location: newLocation })
                         });
                         if (response.ok) {
-                            alert("Ubicación actualizada");
+                            alert("Información actualizada");
                             loadTable();
                         } else {
                             alert("Error al actualizar la información");

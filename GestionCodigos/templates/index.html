@@ -24,6 +24,14 @@
                 <input type="text" id="location" class="form-control"
                     placeholder="Ingresa la ubicación (ej: A1, B2, Estante-3)" required>
             </div>
+            <div class="mb-3">
+                <label for="product" class="form-label">Producto</label>
+                <input type="text" id="product" class="form-control" placeholder="Nombre del producto" required>
+            </div>
+            <div class="mb-3">
+                <label for="brand" class="form-label">Marca</label>
+                <input type="text" id="brand" class="form-control" placeholder="Marca del producto" required>
+            </div>
             <button type="submit" class="btn btn-primary">Registrar</button>
         </form>
 
@@ -35,9 +43,11 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th style="width: 40%;">Código de Barra</th>
-                            <th style="width: 40%;">Ubicación</th>
-                            <th style="width: 20%;">Acciones</th>
+                            <th style="width: 25%;">Código de Barra</th>
+                            <th style="width: 25%;">Ubicación</th>
+                            <th style="width: 25%;">Producto</th>
+                            <th style="width: 25%;">Marca</th>
+                            <th style="width: 10%;">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="registered-products-body">

@@ -8,7 +8,7 @@ DATA_FILE = "data.csv"
 
 # Crear el archivo inicial si no existe
 if not os.path.exists(DATA_FILE):
-    pd.DataFrame(columns=["Código de Barra", "Ubicación"]).to_csv(DATA_FILE, index=False)
+    pd.DataFrame(columns=["Código de Barra", "Ubicación", "Producto", "Marca"]).to_csv(DATA_FILE, index=False)
 
 # Pantalla principal para registrar códigos
 @app.route("/")
@@ -26,21 +26,23 @@ def add_entry():
     data = request.json
     code = data.get("code")
     location = data.get("location")
-    
-    if code and location:
+    product = data.get("product")
+    brand = data.get("brand")
+
+    if code and location and product and brand:
         df = pd.read_csv(DATA_FILE)  # Cargar el archivo CSV existente
         # Verificar si el código ya existe
         if code in df["Código de Barra"].values:
             return jsonify({"success": False, "message": "El código ya existe"}), 400
-        
+
         # Crear un nuevo DataFrame con la nueva fila
-        new_row = pd.DataFrame({"Código de Barra": [code], "Ubicación": [location]})
+        new_row = pd.DataFrame({"Código de Barra": [code], "Ubicación": [location], "Producto": [product], "Marca": [brand]})
         # Concatenar el nuevo DataFrame con el existente
         df = pd.concat([df, new_row], ignore_index=True)
         # Guardar el DataFrame actualizado
         df.to_csv(DATA_FILE, index=False)
         return jsonify({"success": True})
-    
+
     return jsonify({"success": False, "message": "Datos inválidos"}), 400
 
 # Obtener todos los datos para mostrar en la tabla
@@ -49,24 +51,28 @@ def get_data():
     df = pd.read_csv(DATA_FILE)
     return df.to_json(orient="records")
 
-# Editar la ubicación de un código
+# Editar un registro
 @app.route("/edit", methods=["POST"])
 def edit_entry():
     data = request.json
     code = str(data.get("code"))  # Asegurarse de que sea cadena
     location = data.get("location")
-    
-    if code and location:
+    product = data.get("product")
+    brand = data.get("brand")
+
+    if code and location and product and brand:
         df = pd.read_csv(DATA_FILE)
         # Verificar si el código existe
         if code in df["Código de Barra"].astype(str).values:  # Convertir a cadena para evitar errores
             df.loc[df["Código de Barra"].astype(str) == code, "Ubicación"] = location
+            df.loc[df["Código de Barra"].astype(str) == code, "Producto"] = product
+            df.loc[df["Código de Barra"].astype(str) == code, "Marca"] = brand
             df.to_csv(DATA_FILE, index=False)
             return jsonify({"success": True})
         return jsonify({"success": False, "message": "Código no encontrado"}), 404
     return jsonify({"success": False, "message": "Datos inválidos"}), 400
 
-
+# Eliminar un registro
 @app.route("/delete", methods=["POST"])
 def delete_entry():
     data = request.json
@@ -80,9 +86,6 @@ def delete_entry():
             return jsonify({"success": True})
         return jsonify({"success": False, "message": "Código no encontrado"}), 404
     return jsonify({"success": False, "message": "Datos inválidos"}), 400
-
-# Eliminar un código por su valor
-
 
 # Exportar los datos a Excel o PDF
 @app.route("/export/<file_type>")
@@ -103,10 +106,10 @@ def export_data(file_type):
         output_file = os.path.join(BASE_DIR, "data.pdf")
         c = canvas.Canvas(output_file, pagesize=letter)
         df = pd.read_csv(DATA_FILE)
-        c.drawString(100, 750, "Códigos Registrados")
+        c.drawString(100, 750, "Productos Registrados")
         y = 730
         for _, row in df.iterrows():
-            c.drawString(100, y, f"{row['Código de Barra']} - {row['Ubicación']}")
+            c.drawString(100, y, f"{row['Código de Barra']} - {row['Producto']} - {row['Marca']} - {row['Ubicación']}")
             y -= 20
         c.save()
         if os.path.exists(output_file):  # Verificar que el archivo existe
