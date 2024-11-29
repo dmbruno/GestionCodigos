@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (data.length === 0) {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td colspan="5" class="text-center">No se encontraron registros</td>
+                <td colspan="6" class="text-center">No se encontraron registros</td>
             `;
             table.appendChild(row);
         } else {
@@ -34,9 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${item["Código de Barra"]}</td>
+                    <td>${item["Ubicación"]}</td>
                     <td>${item["Producto"]}</td>
                     <td>${item["Marca"]}</td>
-                    <td>${item["Ubicación"]}</td>
+                    <td>${item["Stock"]}</td>
                     <td>
                         <button class="btn btn-warning btn-edit" data-code="${item["Código de Barra"]}">Editar</button>
                         <button class="btn btn-danger btn-delete" data-code="${item["Código de Barra"]}">Eliminar</button>
@@ -54,15 +55,18 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".btn-edit").forEach(button => {
             button.addEventListener("click", async () => {
                 const code = button.getAttribute("data-code");
-                const newProduct = prompt("Ingresa el nuevo nombre del producto para el código: " + code);
-                const newBrand = prompt("Ingresa la nueva marca para el código: " + code);
                 const newLocation = prompt("Ingresa la nueva ubicación para el código: " + code);
-                if (newProduct && newBrand && newLocation) {
+                const newProduct = prompt("Ingresa el nuevo producto:");
+                const newBrand = prompt("Ingresa la nueva marca:");
+                let newStock = prompt("Ingresa el nuevo stock:");
+                newStock = newStock === "" ? 0 : parseInt(newStock, 10);
+
+                if (newLocation && newProduct && newBrand && newStock >= 0) {
                     try {
                         const response = await fetch("/edit", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ code, product: newProduct, brand: newBrand, location: newLocation })
+                            body: JSON.stringify({ code, location: newLocation, product: newProduct, brand: newBrand, stock: newStock })
                         });
                         if (response.ok) {
                             alert("Información actualizada");

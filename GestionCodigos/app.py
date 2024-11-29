@@ -8,7 +8,7 @@ DATA_FILE = "data.csv"
 
 # Crear el archivo inicial si no existe
 if not os.path.exists(DATA_FILE):
-    pd.DataFrame(columns=["Código de Barra", "Ubicación", "Producto", "Marca"]).to_csv(DATA_FILE, index=False)
+    pd.DataFrame(columns=["Código de Barra", "Ubicación", "Producto", "Marca", "Stock"]).to_csv(DATA_FILE, index=False)
 
 # Pantalla principal para registrar códigos
 @app.route("/")
@@ -37,6 +37,7 @@ def add_entry():
     location = data.get("location")
     product = data.get("product")
     brand = data.get("brand")
+    stock = data.get("stock", 0)  # Si no se proporciona, asignar 0
 
     if code and location and product and brand:
         df = pd.read_csv(DATA_FILE)  # Cargar el archivo CSV existente
@@ -45,7 +46,13 @@ def add_entry():
             return jsonify({"success": False, "message": "El código ya existe"}), 400
 
         # Crear un nuevo DataFrame con la nueva fila
-        new_row = pd.DataFrame({"Código de Barra": [code], "Ubicación": [location], "Producto": [product], "Marca": [brand]})
+        new_row = pd.DataFrame({
+            "Código de Barra": [code],
+            "Ubicación": [location],
+            "Producto": [product],
+            "Marca": [brand],
+            "Stock": [stock]
+        })
         # Concatenar el nuevo DataFrame con el existente
         df = pd.concat([df, new_row], ignore_index=True)
         # Guardar el DataFrame actualizado
@@ -58,6 +65,8 @@ def add_entry():
 @app.route("/data")
 def get_data():
     df = pd.read_csv(DATA_FILE)
+    if "Stock" not in df.columns:  # Si no existe la columna, añadirla
+        df["Stock"] = 0
     return df.to_json(orient="records")
 
 # Editar un registro
@@ -68,6 +77,7 @@ def edit_entry():
     location = data.get("location")
     product = data.get("product")
     brand = data.get("brand")
+    stock = data.get("stock", 0)  # Asignar 0 si no se proporciona
 
     if code and location and product and brand:
         df = pd.read_csv(DATA_FILE)
@@ -76,6 +86,7 @@ def edit_entry():
             df.loc[df["Código de Barra"].astype(str) == code, "Ubicación"] = location
             df.loc[df["Código de Barra"].astype(str) == code, "Producto"] = product
             df.loc[df["Código de Barra"].astype(str) == code, "Marca"] = brand
+            df.loc[df["Código de Barra"].astype(str) == code, "Stock"] = stock
             df.to_csv(DATA_FILE, index=False)
             return jsonify({"success": True})
         return jsonify({"success": False, "message": "Código no encontrado"}), 404
@@ -118,13 +129,13 @@ def export_data(file_type):
         c.drawString(100, 750, "Productos Registrados")
         y = 730
         for _, row in df.iterrows():
-            c.drawString(100, y, f"{row['Código de Barra']} - {row['Producto']} - {row['Marca']} - {row['Ubicación']}")
+            c.drawString(100, y, f"{row['Código de Barra']} - {row['Producto']} - {row['Marca']} - {row['Ubicación']} - {row['Stock']}")
             y -= 20
         c.save()
         if os.path.exists(output_file):  # Verificar que el archivo existe
             return send_file(output_file, as_attachment=True)
-        else:
-            return "El archivo PDF no se pudo generar", 500
+    else:
+        return "El archivo PDF no se pudo generar", 500
     return "Tipo de archivo no válido", 400
 
 if __name__ == "__main__":

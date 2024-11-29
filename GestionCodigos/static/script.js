@@ -10,11 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const location = document.getElementById("location").value;
         const product = document.getElementById("product").value;
         const brand = document.getElementById("brand").value;
+        const stock = document.getElementById("stock").value || 0; // Si está vacío, asignar 0
 
         const response = await fetch("/add", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ code, location, product, brand })
+            body: JSON.stringify({ code, location, product, brand, stock })
         });
         if (response.ok) {
             alert("Producto registrado con éxito");
@@ -48,14 +49,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Manejar la eliminación de todos los registros
     deleteAllButton.addEventListener("click", async () => {
-        if (confirm("¿Estás seguro de eliminar todos los registros? Esta acción no se puede deshacer.")) {
+        if (confirm("¿Estás seguro de eliminar todos los registros?")) {
             try {
                 const response = await fetch("/delete-all", {
-                    method: "POST",
+                    method: "POST"
                 });
                 if (response.ok) {
-                    alert("Todos los registros fueron eliminados");
-                    loadRegisteredProducts(); // Actualizar la lista después de eliminar
+                    alert("Todos los registros han sido eliminados");
+                    loadRegisteredProducts(); // Actualizar la lista de productos registrados
                 } else {
                     alert("Error al eliminar los registros");
                 }
@@ -84,9 +85,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td>${product["Código de Barra"]}</td>
-                <td>${product["Producto"]}</td>
-                <td>${product["Marca"]}</td>
                 <td>${product["Ubicación"]}</td>
+                <td>${product["Producto"]}</td>
                 <td>
                     <button class="btn btn-danger btn-sm btn-delete" data-code="${product["Código de Barra"]}">
                         Eliminar
