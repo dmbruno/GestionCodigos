@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("barcode-form");
     const exportExcelButton = document.getElementById("export-excel");
+    const deleteAllButton = document.getElementById("delete-all");
 
     // Manejar el formulario de registro
     form.addEventListener("submit", async (e) => {
@@ -45,6 +46,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // Manejar la eliminación de todos los registros
+    deleteAllButton.addEventListener("click", async () => {
+        if (confirm("¿Estás seguro de eliminar todos los registros? Esta acción no se puede deshacer.")) {
+            try {
+                const response = await fetch("/delete-all", {
+                    method: "POST",
+                });
+                if (response.ok) {
+                    alert("Todos los registros fueron eliminados");
+                    loadRegisteredProducts(); // Actualizar la lista después de eliminar
+                } else {
+                    alert("Error al eliminar los registros");
+                }
+            } catch (error) {
+                console.error("Error al eliminar todos los registros:", error);
+            }
+        }
+    });
+
     // Cargar los productos registrados en el componente scrollable
     const loadRegisteredProducts = async () => {
         const response = await fetch("/data");
@@ -64,9 +84,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const row = document.createElement("tr");
             row.innerHTML = `
                 <td>${product["Código de Barra"]}</td>
-                <td>${product["Ubicación"]}</td>
                 <td>${product["Producto"]}</td>
                 <td>${product["Marca"]}</td>
+                <td>${product["Ubicación"]}</td>
                 <td>
                     <button class="btn btn-danger btn-sm btn-delete" data-code="${product["Código de Barra"]}">
                         Eliminar

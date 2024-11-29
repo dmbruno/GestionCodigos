@@ -20,17 +20,17 @@
                 <input type="text" id="barcode" class="form-control" placeholder="Escanea o ingresa el código" required>
             </div>
             <div class="mb-3">
-                <label for="location" class="form-label">Ubicación</label>
-                <input type="text" id="location" class="form-control"
-                    placeholder="Ingresa la ubicación (ej: A1, B2, Estante-3)" required>
-            </div>
-            <div class="mb-3">
                 <label for="product" class="form-label">Producto</label>
-                <input type="text" id="product" class="form-control" placeholder="Nombre del producto" required>
+                <input type="text" id="product" class="form-control" placeholder="Ingresa el nombre del producto" required>
             </div>
             <div class="mb-3">
                 <label for="brand" class="form-label">Marca</label>
-                <input type="text" id="brand" class="form-control" placeholder="Marca del producto" required>
+                <input type="text" id="brand" class="form-control" placeholder="Ingresa la marca del producto" required>
+            </div>
+            <div class="mb-3">
+                <label for="location" class="form-label">Ubicación</label>
+                <input type="text" id="location" class="form-control"
+                    placeholder="Ingresa la ubicación (ej: A1, B2, Estante-3)" required>
             </div>
             <button type="submit" class="btn btn-primary">Registrar</button>
         </form>
@@ -38,16 +38,16 @@
         <!-- Contenedor scrollable para los productos registrados -->
         <div class="mt-4">
             <h5>Productos Registrados</h5>
-            <div id="registered-products" class="table-responsive border p-3"
+            <div id="registered-products" class="table-responsive border"
                 style="max-height: 200px; overflow-y: auto;">
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th style="width: 25%;">Código de Barra</th>
-                            <th style="width: 25%;">Ubicación</th>
-                            <th style="width: 25%;">Producto</th>
-                            <th style="width: 25%;">Marca</th>
-                            <th style="width: 10%;">Acciones</th>
+                            <th>Código de Barra</th>
+                            <th>Producto</th>
+                            <th>Marca</th>
+                            <th>Ubicación</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="registered-products-body">
@@ -57,10 +57,11 @@
             </div>
         </div>
 
-        <!-- Botones para exportar y consultar -->
-        <div class="mt-4">
+        <!-- Botones para exportar, consultar y eliminar -->
+        <div class="mt-4 d-flex gap-2">
             <button id="export-excel" class="btn btn-success">Exportar Excel</button>
             <a href="/consulta" class="btn btn-info">Consultar Base</a>
+            <button id="delete-all" class="btn btn-danger">Eliminar Base</button>
         </div>
     </div>
     <script src="/static/script.js"></script>

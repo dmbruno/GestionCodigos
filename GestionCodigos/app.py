@@ -20,6 +20,15 @@ def index():
 def consulta():
     return render_template("consulta.html")
 
+# Eliminar todos los registros
+@app.route("/delete-all", methods=["POST"])
+def delete_all_entries():
+    try:
+        # Sobrescribir el archivo con un DataFrame vacío con las mismas columnas
+        pd.DataFrame(columns=["Código de Barra", "Ubicación", "Producto", "Marca"]).to_csv(DATA_FILE, index=False)
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500
 # Registrar un nuevo código
 @app.route("/add", methods=["POST"])
 def add_entry():
