@@ -84,11 +84,11 @@ document.addEventListener("DOMContentLoaded", () => {
         products.forEach(product => {
             const row = document.createElement("tr");
             row.innerHTML = `
-                <td>${product["Código de Barra"]}</td>
-                <td>${product["Ubicación"]}</td>
-                <td>${product["Producto"]}</td>
-                <td>
-                    <button class="btn btn-danger btn-sm btn-delete" data-code="${product["Código de Barra"]}">
+                <td class="text-center">${product["Código de Barra"] || ""}</td>
+                <td class="text-center">${product["Ubicación"] || ""}</td>
+                <td class="text-center">${product["Producto"] || ""}</td>
+                <td class="text-center">
+                    <button class="btn btn-sm btn-danger btn-delete" data-code="${product["Código de Barra"]}">
                         Eliminar
                     </button>
                 </td>

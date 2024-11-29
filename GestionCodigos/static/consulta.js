@@ -37,10 +37,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td>${item["Ubicación"]}</td>
                     <td>${item["Producto"]}</td>
                     <td>${item["Marca"]}</td>
-                    <td>${item["Stock"]}</td>
+                    <td>${item["Stock"] || "0"}</td>
                     <td>
-                        <button class="btn btn-warning btn-edit" data-code="${item["Código de Barra"]}">Editar</button>
-                        <button class="btn btn-danger btn-delete" data-code="${item["Código de Barra"]}">Eliminar</button>
+                        <div class="d-flex">
+                            <button class="btn btn-edit me-2" data-code="${item["Código de Barra"]}">Edit</button>
+                            <button class="btn btn-delete" data-code="${item["Código de Barra"]}">Delete</button>
+                        </div>
                     </td>
                 `;
                 table.appendChild(row);
@@ -55,18 +57,29 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".btn-edit").forEach(button => {
             button.addEventListener("click", async () => {
                 const code = button.getAttribute("data-code");
+                if (!code) {
+                    alert("Código no encontrado.");
+                    return;
+                }
+
                 const newLocation = prompt("Ingresa la nueva ubicación para el código: " + code);
                 const newProduct = prompt("Ingresa el nuevo producto:");
                 const newBrand = prompt("Ingresa la nueva marca:");
                 let newStock = prompt("Ingresa el nuevo stock:");
-                newStock = newStock === "" ? 0 : parseInt(newStock, 10);
 
-                if (newLocation && newProduct && newBrand && newStock >= 0) {
+                if (newLocation && newProduct && newBrand) {
+                    newStock = newStock === "" || isNaN(newStock) ? 0 : parseInt(newStock, 10);
                     try {
                         const response = await fetch("/edit", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ code, location: newLocation, product: newProduct, brand: newBrand, stock: newStock })
+                            body: JSON.stringify({
+                                code,
+                                location: newLocation,
+                                product: newProduct,
+                                brand: newBrand,
+                                stock: newStock
+                            })
                         });
                         if (response.ok) {
                             alert("Información actualizada");
@@ -77,6 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     } catch (error) {
                         console.error("Error al editar:", error);
                     }
+                } else {
+                    alert("Todos los campos son obligatorios.");
                 }
             });
         });
@@ -115,11 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const filteredData = allData.filter(item =>
                 String(item["Código de Barra"]).includes(searchTerm)
             );
-            if (filteredData.length === 0) {
-                renderTable([]); // Si no hay resultados, muestra mensaje de "No se encontraron registros"
-            } else {
-                renderTable(filteredData); // Muestra solo el registro encontrado
-            }
+            renderTable(filteredData);
         }
     });
 
