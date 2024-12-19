@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Producto registrado con éxito");
             form.reset();
             loadRegisteredProducts(); // Actualizar la lista de productos registrados
+            document.getElementById("barcode").focus();
         } else {
             alert("Error al registrar el producto");
         }
